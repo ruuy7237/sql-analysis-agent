@@ -1,0 +1,382 @@
+{
+  "rule": {
+    "total": 25,
+    "correct": 10,
+    "accuracy": 40.0,
+    "by_level": {
+      "easy": {
+        "total": 8,
+        "accuracy": 25.0
+      },
+      "medium": {
+        "total": 11,
+        "accuracy": 54.5
+      },
+      "hard": {
+        "total": 6,
+        "accuracy": 33.3
+      }
+    }
+  },
+  "llm": {
+    "total": 0,
+    "correct": 0,
+    "accuracy": 0.0
+  },
+  "records": [
+    {
+      "id": "Q01",
+      "level": "easy",
+      "q": "一共有多少笔订单？",
+      "gold_preview": [
+        [
+          1500
+        ]
+      ],
+      "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q02",
+      "level": "easy",
+      "q": "一共有多少位客户？",
+      "gold_preview": [
+        [
+          120
+        ]
+      ],
+      "rule_sql": "",
+      "rule_ok": false,
+      "rule_err": "规则基线拼不出 SQL"
+    },
+    {
+      "id": "Q03",
+      "level": "easy",
+      "q": "已完成状态的订单有多少笔？",
+      "gold_preview": [
+        [
+          647
+        ]
+      ],
+      "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q04",
+      "level": "easy",
+      "q": "被取消的订单有多少笔？",
+      "gold_preview": [
+        [
+          220
+        ]
+      ],
+      "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q05",
+      "level": "easy",
+      "q": "所有订单的平均金额是多少？（保留两位小数）",
+      "gold_preview": [
+        [
+          5061.73
+        ]
+      ],
+      "rule_sql": "",
+      "rule_ok": false,
+      "rule_err": "规则基线拼不出 SQL"
+    },
+    {
+      "id": "Q06",
+      "level": "easy",
+      "q": "最贵的商品价格是多少？",
+      "gold_preview": [
+        [
+          8071.74
+        ]
+      ],
+      "rule_sql": "SELECT MAX(price) AS max_price FROM products LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q07",
+      "level": "easy",
+      "q": "钻石等级的客户有多少人？",
+      "gold_preview": [
+        [
+          25
+        ]
+      ],
+      "rule_sql": "SELECT COUNT(*) AS cnt FROM customers WHERE level='钻石' LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q08",
+      "level": "easy",
+      "q": "金额超过 5000 元的订单有多少笔？",
+      "gold_preview": [
+        [
+          482
+        ]
+      ],
+      "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q09",
+      "level": "medium",
+      "q": "GMV（已完成和已发货订单的总销售额）是多少元？",
+      "gold_preview": [
+        [
+          5392757.61
+        ]
+      ],
+      "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q10",
+      "level": "medium",
+      "q": "客单价是多少元？（GMV 口径下的平均订单金额）",
+      "gold_preview": [
+        [
+          5063.62
+        ]
+      ],
+      "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q11",
+      "level": "medium",
+      "q": "上海的 GMV 是多少元？",
+      "gold_preview": [
+        [
+          630539.71
+        ]
+      ],
+      "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o JOIN customers c ON o.customer_id=c.id WHERE c.city='上海' AND o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q12",
+      "level": "medium",
+      "q": "每个城市各有多少笔订单？",
+      "gold_preview": [
+        [
+          "深圳",
+          248
+        ],
+        [
+          "西安",
+          236
+        ]
+      ],
+      "rule_sql": "SELECT c.city, COUNT(*) AS cnt FROM orders o JOIN customers c ON o.customer_id=c.id GROUP BY c.city ORDER BY cnt DESC LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q13",
+      "level": "medium",
+      "q": "每个城市的 GMV 是多少元？",
+      "gold_preview": [
+        [
+          "深圳",
+          999415.76
+        ],
+        [
+          "西安",
+          798817.8
+        ]
+      ],
+      "rule_sql": "SELECT c.city, ROUND(SUM(o.total_amount),2) AS amount FROM orders o JOIN customers c ON o.customer_id=c.id WHERE o.status IN ('已完成','已发货') GROUP BY c.city ORDER BY amount DESC LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q14",
+      "level": "medium",
+      "q": "各个品类的销售额是多少元？",
+      "gold_preview": [
+        [
+          "家用电器",
+          2529141.42
+        ],
+        [
+          "手机数码",
+          1544902.64
+        ]
+      ],
+      "rule_sql": "SELECT cat.name, ROUND(SUM(oi.amount),2) AS amount FROM order_items oi JOIN orders o ON o.id=oi.order_id JOIN products p ON p.id=oi.product_id JOIN categories cat ON cat.id=p.category_id WHERE o.status IN ('已完成','已发货') GROUP BY cat.id ORDER BY amount DESC LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q15",
+      "level": "medium",
+      "q": "销售额排名前三的品类是哪些？",
+      "gold_preview": [
+        [
+          "家用电器"
+        ],
+        [
+          "手机数码"
+        ]
+      ],
+      "rule_sql": "SELECT cat.name, ROUND(SUM(oi.amount),2) AS amount FROM order_items oi JOIN orders o ON o.id=oi.order_id JOIN products p ON p.id=oi.product_id JOIN categories cat ON cat.id=p.category_id WHERE o.status IN ('已完成','已发货') GROUP BY cat.id ORDER BY amount DESC LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q16",
+      "level": "medium",
+      "q": "上个月（相对今天的上一个自然月）的 GMV 是多少元？",
+      "gold_preview": [
+        [
+          384255.45
+        ]
+      ],
+      "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE strftime('%Y-%m', o.created_at) = strftime('%Y-%m','now','-1 month') AND o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q17",
+      "level": "medium",
+      "q": "最近 30 天产生了多少笔订单？",
+      "gold_preview": [
+        [
+          104
+        ]
+      ],
+      "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.created_at >= date('now','-30 days') AND o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q18",
+      "level": "medium",
+      "q": "手机数码品类下一共有几件商品？",
+      "gold_preview": [
+        [
+          5
+        ]
+      ],
+      "rule_sql": "SELECT cat.name, ROUND(SUM(oi.amount),2) AS amount FROM order_items oi JOIN orders o ON o.id=oi.order_id JOIN products p ON p.id=oi.product_id JOIN categories cat ON cat.id=p.category_id WHERE o.status IN ('已完成','已发货') GROUP BY cat.id ORDER BY amount DESC LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q19",
+      "level": "medium",
+      "q": "每个客户等级的平均订单金额是多少元？",
+      "gold_preview": [
+        [
+          "普通",
+          5433.89
+        ],
+        [
+          "钻石",
+          5050.04
+        ]
+      ],
+      "rule_sql": "",
+      "rule_ok": false,
+      "rule_err": "规则基线拼不出 SQL"
+    },
+    {
+      "id": "Q20",
+      "level": "hard",
+      "q": "销售额最高的商品是哪一件？给出商品名。",
+      "gold_preview": [
+        [
+          "风冷十字冰箱"
+        ]
+      ],
+      "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q21",
+      "level": "hard",
+      "q": "销量（件数）最高的商品一共卖了多少件？",
+      "gold_preview": [
+        [
+          190
+        ]
+      ],
+      "rule_sql": "",
+      "rule_ok": false,
+      "rule_err": "规则基线拼不出 SQL"
+    },
+    {
+      "id": "Q22",
+      "level": "hard",
+      "q": "GMV 最高的城市是哪一个？",
+      "gold_preview": [
+        [
+          "深圳"
+        ]
+      ],
+      "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": false,
+      "rule_err": ""
+    },
+    {
+      "id": "Q23",
+      "level": "hard",
+      "q": "消费总额最高的客户一共消费了多少元？",
+      "gold_preview": [
+        [
+          136013.29
+        ]
+      ],
+      "rule_sql": "",
+      "rule_ok": false,
+      "rule_err": "规则基线拼不出 SQL"
+    },
+    {
+      "id": "Q24",
+      "level": "hard",
+      "q": "按月的 GMV 趋势是怎样的？",
+      "gold_preview": [
+        [
+          "2025-08",
+          41510.59
+        ],
+        [
+          "2025-09",
+          353746.18
+        ]
+      ],
+      "rule_sql": "SELECT strftime('%Y-%m', o.created_at) AS ym, ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') GROUP BY ym ORDER BY ym LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    },
+    {
+      "id": "Q25",
+      "level": "hard",
+      "q": "本自然年（今年）的 GMV 是多少元？",
+      "gold_preview": [
+        [
+          3869922.38
+        ]
+      ],
+      "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE strftime('%Y', o.created_at) = strftime('%Y','now') AND o.status IN ('已完成','已发货') LIMIT 200",
+      "rule_ok": true,
+      "rule_err": ""
+    }
+  ],
+  "gold_errors": []
+}
