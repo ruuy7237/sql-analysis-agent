@@ -15,16 +15,17 @@
 git clone https://github.com/ruuy7237/sql-analysis-agent.git
 cd sql-analysis-agent
 
+# 已接入 DeepSeek：项目根目录的 .env 里放好 LLM_API_KEY，默认就走真实模型
 python db/seed.py                 # 生成确定性示例电商库（120 客户 / 30 商品 / 1500 订单）
 python evals/run_eval.py          # 25 道题执行准确率评测
 python weekly_report.py           # 生成一份本周经营周报
 
 # 单条提问
 python -m agent.sql_agent "上个月各个品类的销售额是多少？" --show-sql
-
-# 接真实模型（不配则用规则基线兜底）
-export LLM_API_KEY=sk-xxxxx
 python -m agent.sql_agent "GMV 最高的城市是哪一个？"
+
+# 想退回规则基线（不联网、不花钱）就删掉 .env，再指定引擎：
+python -m agent.sql_agent "GMV 最高的城市是哪一个？" --engine rule
 ```
 
 ## 链路
@@ -79,12 +80,12 @@ Agent 会执行 SQL，所以这道门必须硬：
 | 相对时间 | 上个月 GMV / 最近 30 天订单数 / 今年 GMV |
 | 双指标 | 按月 GMV 趋势 |
 
-结果见 **[evals/report.md](evals/report.md)**，当前一轮（规则基线对照组）：
+结果见 **[evals/report.md](evals/report.md)**，当前一轮（已接入 DeepSeek 真实模型）：
 
-| 方案 | 执行准确率 |
-| --- | --- |
-| rule-baseline（关键词规则） | 40.0%（10/25） |
-| LLM（配置 LLM_API_KEY 后跑） | 待补充 |
+| 方案 | 执行准确率 | easy (8) | medium (11) | hard (6) |
+| --- | --- | --- | --- | --- |
+| rule-baseline（关键词规则） | 40.0%（10/25） | 25.0% | 54.5% | 33.3% |
+| **LLM（deepseek-chat）** | **76.0%（19/25）** | 87.5% | 81.8% | 50.0% |
 
 规则基线的价值在于提供参照：它能稳定做对「计数 + 简单过滤」这类，但遇到同义改写（「客单价」→ AVG）、多指标、隐含口径（GMV 只算已完成和已发货）就全面失效。把这两组的差距摆在报告里，才说得清 LLM 方案带来了什么。
 

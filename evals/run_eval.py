@@ -167,7 +167,10 @@ def write_report(items, records, gold_errors, rule_sum, llm_sum, include_llm, la
         for g in gold_errors:
             lines.append(f"> - {g['id']} {g['q']}：{g['error']}")
 
-    lines += ["", "> 配置 LLM_API_KEY 后重跑可得到真实模型的数字。", ""]
+    if include_llm:
+        lines += ["", "> 以上为接入 DeepSeek（deepseek-chat）后跑出的真实成绩。", ""]
+    else:
+        lines += ["", "> 当前为规则基线（未配置 LLM_API_KEY）。配置 key 后重跑可得到 LLM 方案的数字。", ""]
     with open(REPORT, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
     return REPORT

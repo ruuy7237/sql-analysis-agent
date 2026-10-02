@@ -19,9 +19,23 @@
     }
   },
   "llm": {
-    "total": 0,
-    "correct": 0,
-    "accuracy": 0.0
+    "total": 25,
+    "correct": 19,
+    "accuracy": 76.0,
+    "by_level": {
+      "easy": {
+        "total": 8,
+        "accuracy": 87.5
+      },
+      "medium": {
+        "total": 11,
+        "accuracy": 81.8
+      },
+      "hard": {
+        "total": 6,
+        "accuracy": 50.0
+      }
+    }
   },
   "records": [
     {
@@ -35,7 +49,11 @@
       ],
       "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT COUNT(*) AS cnt FROM orders LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q02",
@@ -48,7 +66,11 @@
       ],
       "rule_sql": "",
       "rule_ok": false,
-      "rule_err": "规则基线拼不出 SQL"
+      "rule_err": "规则基线拼不出 SQL",
+      "llm_sql": "SELECT COUNT(*) AS cnt FROM customers LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q03",
@@ -61,7 +83,11 @@
       ],
       "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT COUNT(*) AS cnt FROM orders WHERE status = '已完成' LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q04",
@@ -74,7 +100,11 @@
       ],
       "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT COUNT(*) AS cnt FROM orders WHERE status = '已取消' LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q05",
@@ -87,7 +117,11 @@
       ],
       "rule_sql": "",
       "rule_ok": false,
-      "rule_err": "规则基线拼不出 SQL"
+      "rule_err": "规则基线拼不出 SQL",
+      "llm_sql": "SELECT ROUND(AVG(total_amount),2) AS avg_amount FROM orders LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q06",
@@ -100,7 +134,11 @@
       ],
       "rule_sql": "SELECT MAX(price) AS max_price FROM products LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT ROUND(MAX(price),2) AS max_price FROM products LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q07",
@@ -113,7 +151,11 @@
       ],
       "rule_sql": "SELECT COUNT(*) AS cnt FROM customers WHERE level='钻石' LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT COUNT(*) AS cnt FROM customers WHERE level = '钻石' LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q08",
@@ -126,7 +168,11 @@
       ],
       "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT COUNT(*) AS cnt FROM orders\nWHERE status IN ('已完成','已发货') AND total_amount > 5000 LIMIT 200",
+      "llm_ok": false,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q09",
@@ -139,7 +185,11 @@
       ],
       "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT ROUND(SUM(total_amount),2) AS gmv FROM orders WHERE status IN ('已完成','已发货') LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q10",
@@ -152,7 +202,11 @@
       ],
       "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT ROUND(SUM(total_amount) * 1.0 / COUNT(*), 2) AS aov\nFROM orders\nWHERE status IN ('已完成','已发货') LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q11",
@@ -165,7 +219,11 @@
       ],
       "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o JOIN customers c ON o.customer_id=c.id WHERE c.city='上海' AND o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT ROUND(SUM(o.total_amount),2) AS gmv\nFROM orders o JOIN customers c ON o.customer_id = c.id\nWHERE c.city = '上海' AND o.status IN ('已完成','已发货') LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q12",
@@ -183,7 +241,11 @@
       ],
       "rule_sql": "SELECT c.city, COUNT(*) AS cnt FROM orders o JOIN customers c ON o.customer_id=c.id GROUP BY c.city ORDER BY cnt DESC LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT c.city, COUNT(*) AS order_count\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nGROUP BY c.city\nORDER BY order_count DESC LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q13",
@@ -201,7 +263,11 @@
       ],
       "rule_sql": "SELECT c.city, ROUND(SUM(o.total_amount),2) AS amount FROM orders o JOIN customers c ON o.customer_id=c.id WHERE o.status IN ('已完成','已发货') GROUP BY c.city ORDER BY amount DESC LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT c.city, ROUND(SUM(o.total_amount),2) AS gmv\nFROM orders o JOIN customers c ON o.customer_id = c.id\nWHERE o.status IN ('已完成','已发货')\nGROUP BY c.city ORDER BY gmv DESC LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q14",
@@ -219,7 +285,11 @@
       ],
       "rule_sql": "SELECT cat.name, ROUND(SUM(oi.amount),2) AS amount FROM order_items oi JOIN orders o ON o.id=oi.order_id JOIN products p ON p.id=oi.product_id JOIN categories cat ON cat.id=p.category_id WHERE o.status IN ('已完成','已发货') GROUP BY cat.id ORDER BY amount DESC LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT cat.name, ROUND(SUM(oi.amount),2) AS amount\nFROM order_items oi\nJOIN orders o ON o.id = oi.order_id\nJOIN products p ON p.id = oi.product_id\nJOIN categories cat ON cat.id = p.category_id\nWHERE o.status IN ('已完成','已发货')\nGROUP BY cat.id ORDER BY amount DESC LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q15",
@@ -235,7 +305,11 @@
       ],
       "rule_sql": "SELECT cat.name, ROUND(SUM(oi.amount),2) AS amount FROM order_items oi JOIN orders o ON o.id=oi.order_id JOIN products p ON p.id=oi.product_id JOIN categories cat ON cat.id=p.category_id WHERE o.status IN ('已完成','已发货') GROUP BY cat.id ORDER BY amount DESC LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT cat.name, ROUND(SUM(oi.amount),2) AS amount\nFROM order_items oi\nJOIN orders o ON o.id = oi.order_id\nJOIN products p ON p.id = oi.product_id\nJOIN categories cat ON cat.id = p.category_id\nWHERE o.status IN ('已完成','已发货')\nGROUP BY cat.id ORDER BY amount DESC LIMIT 3",
+      "llm_ok": false,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q16",
@@ -248,7 +322,11 @@
       ],
       "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE strftime('%Y-%m', o.created_at) = strftime('%Y-%m','now','-1 month') AND o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT ROUND(SUM(total_amount),2) AS gmv FROM orders\nWHERE status IN ('已完成','已发货')\n  AND strftime('%Y-%m', created_at) = strftime('%Y-%m','now','-1 month') LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q17",
@@ -261,7 +339,11 @@
       ],
       "rule_sql": "SELECT COUNT(*) AS cnt FROM orders o WHERE o.created_at >= date('now','-30 days') AND o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT COUNT(*) AS cnt FROM orders\nWHERE created_at >= date('now','-30 days') LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q18",
@@ -274,7 +356,11 @@
       ],
       "rule_sql": "SELECT cat.name, ROUND(SUM(oi.amount),2) AS amount FROM order_items oi JOIN orders o ON o.id=oi.order_id JOIN products p ON p.id=oi.product_id JOIN categories cat ON cat.id=p.category_id WHERE o.status IN ('已完成','已发货') GROUP BY cat.id ORDER BY amount DESC LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT COUNT(*) AS cnt\nFROM products p JOIN categories c ON p.category_id = c.id\nWHERE c.name = '手机数码' LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q19",
@@ -292,7 +378,11 @@
       ],
       "rule_sql": "",
       "rule_ok": false,
-      "rule_err": "规则基线拼不出 SQL"
+      "rule_err": "规则基线拼不出 SQL",
+      "llm_sql": "SELECT c.level, ROUND(AVG(o.total_amount),2) AS avg_amount\nFROM orders o JOIN customers c ON o.customer_id = c.id\nWHERE o.status IN ('已完成','已发货')\nGROUP BY c.level ORDER BY avg_amount DESC LIMIT 200",
+      "llm_ok": false,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q20",
@@ -305,7 +395,11 @@
       ],
       "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT p.name, ROUND(SUM(oi.amount),2) AS amount\nFROM order_items oi\nJOIN orders o ON o.id = oi.order_id\nJOIN products p ON p.id = oi.product_id\nWHERE o.status IN ('已完成','已发货')\nGROUP BY p.id ORDER BY amount DESC LIMIT 1",
+      "llm_ok": false,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q21",
@@ -318,7 +412,11 @@
       ],
       "rule_sql": "",
       "rule_ok": false,
-      "rule_err": "规则基线拼不出 SQL"
+      "rule_err": "规则基线拼不出 SQL",
+      "llm_sql": "SELECT p.name, SUM(oi.quantity) AS qty\nFROM order_items oi\nJOIN orders o ON o.id = oi.order_id\nJOIN products p ON p.id = oi.product_id\nWHERE o.status IN ('已完成','已发货')\nGROUP BY p.id ORDER BY qty DESC LIMIT 1",
+      "llm_ok": false,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q22",
@@ -331,7 +429,11 @@
       ],
       "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": false,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT c.city, ROUND(SUM(o.total_amount),2) AS gmv\nFROM orders o JOIN customers c ON o.customer_id = c.id\nWHERE o.status IN ('已完成','已发货')\nGROUP BY c.city ORDER BY gmv DESC LIMIT 1",
+      "llm_ok": false,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q23",
@@ -344,7 +446,11 @@
       ],
       "rule_sql": "",
       "rule_ok": false,
-      "rule_err": "规则基线拼不出 SQL"
+      "rule_err": "规则基线拼不出 SQL",
+      "llm_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount\nFROM orders o\nWHERE o.status IN ('已完成','已发货')\nGROUP BY o.customer_id\nORDER BY amount DESC LIMIT 1",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q24",
@@ -362,7 +468,11 @@
       ],
       "rule_sql": "SELECT strftime('%Y-%m', o.created_at) AS ym, ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE o.status IN ('已完成','已发货') GROUP BY ym ORDER BY ym LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT strftime('%Y-%m', created_at) AS month, ROUND(SUM(total_amount),2) AS gmv\nFROM orders\nWHERE status IN ('已完成','已发货')\nGROUP BY month ORDER BY month LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     },
     {
       "id": "Q25",
@@ -375,7 +485,11 @@
       ],
       "rule_sql": "SELECT ROUND(SUM(o.total_amount),2) AS amount FROM orders o WHERE strftime('%Y', o.created_at) = strftime('%Y','now') AND o.status IN ('已完成','已发货') LIMIT 200",
       "rule_ok": true,
-      "rule_err": ""
+      "rule_err": "",
+      "llm_sql": "SELECT ROUND(SUM(total_amount),2) AS gmv FROM orders\nWHERE status IN ('已完成','已发货')\n  AND strftime('%Y', created_at) = strftime('%Y','now') LIMIT 200",
+      "llm_ok": true,
+      "llm_repaired": false,
+      "llm_err": ""
     }
   ],
   "gold_errors": []
